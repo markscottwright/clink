@@ -60,11 +60,16 @@ end
 local start_parser = clink.arg.new_parser():set_arguments({stopped_services})
 local stop_parser = clink.arg.new_parser():set_arguments({running_services})
 local user_parser = clink.arg.new_parser():set_arguments({users})
+local server_workstation = clink.arg.new_parser():set_arguments(
+    {"server", "workstation"})
 local net_parser = clink.arg.new_parser()
 net_parser:set_arguments(
     {"start" .. start_parser, "stop" .. stop_parser,
-    "accounts", "computer", "config", "continue", "file", "group", "help",
-    "helpmsg", "localgroup", "pause", "session", "share", "start", "statistics",
+    "accounts", "computer", 
+    "config" .. server_workstation, 
+    "continue", "file", "group", "help",
+    "helpmsg", "localgroup", "pause", "session", "share", "start", 
+    "statistics" .. server_workstation,
     "stop", "time", "use", 
     "user" .. user_parser, "view"
     })

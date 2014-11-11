@@ -42,14 +42,36 @@ function stopped_services(word)
         string.len("SERVICE_NAME: "))
 end
 
+function users()
+	local results = capture("net user", false)
+	local prefixstart, prefixend = string.find(results, "---+")
+	local suffixstart, suffixend = string.find(results, 
+            "The command completed successfully.")
+
+	local usersstr = string.sub(results, prefixend+1, suffixstart-1)
+	local usertable = {}
+	for user in string.gmatch(usersstr, "%w+") do
+		usertable[#usertable+1] = user
+	end
+	return usertable
+end
+
+
 local start_parser = clink.arg.new_parser():set_arguments({stopped_services})
 local stop_parser = clink.arg.new_parser():set_arguments({running_services})
+local user_parser = clink.arg.new_parser():set_arguments({users})
+local server_workstation = clink.arg.new_parser():set_arguments(
+    {"server", "workstation"})
 local net_parser = clink.arg.new_parser()
 net_parser:set_arguments(
     {"start" .. start_parser, "stop" .. stop_parser,
-    "accounts", "computer", "config", "continue", "file", "group", "help",
-    "helpmsg", "localgroup", "pause", "session", "share", "start", "statistics",
-    "stop", "time", "use", "user", "view"
+    "accounts", "computer", 
+    "config" .. server_workstation, 
+    "continue", "file", "group", "help",
+    "helpmsg", "localgroup", "pause", "session", "share", "start", 
+    "statistics" .. server_workstation,
+    "stop", "time", "use", 
+    "user" .. user_parser, "view"
     })
 
 clink.arg.register_parser("net", net_parser)
